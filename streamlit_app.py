@@ -5,6 +5,7 @@ import csv
 import os
 import pandas as pd
 from datetime import datetime
+from zoneinfo import ZoneInfo  # Python 3.9+
 
 st.set_page_config(page_title="Kuis Matematika SD", page_icon="🧮")
 
@@ -19,11 +20,13 @@ def simpan_skor(nama, kelas, skor, total):
     header = ["Tanggal", "Nama", "Kelas", "Skor", "Total"]
     file_ada = os.path.isfile(file)
 
+    waktu_sekarang = datetime.now(ZoneInfo("Asia/Jakarta")).strftime("%Y-%m-%d %H:%M")
+
     with open(file, mode="a", newline="", encoding="utf-8") as f:
         writer = csv.writer(f)
         if not file_ada:
             writer.writerow(header)
-        writer.writerow([datetime.now().strftime("%Y-%m-%d %H:%M"), nama, kelas, skor, total])
+        writer.writerow([waktu_sekarang, nama, kelas, skor, total])
 
 def tampilkan_statistik():
     if not os.path.exists("skor.csv"):
@@ -70,6 +73,9 @@ if "index_soal" not in st.session_state:
     st.session_state.kelas_dipilih = None
     st.session_state.soal_acak = []
 
+if "skor_tersimpan" not in st.session_state:
+    st.session_state.skor_tersimpan = False
+
 # ========== MAIN ==========
 st.title("🧮 Kuis Matematika SD")
 st.markdown(f"Selamat datang, **{st.session_state.siswa_nama}** dari **{st.session_state.siswa_kelas}** 👋")
@@ -106,14 +112,16 @@ if st.session_state.index_soal < len(st.session_state.soal_acak):
             st.rerun()
 else:
     st.success(f"🎉 Kuis selesai, {st.session_state.siswa_nama}! Skor kamu: {st.session_state.skor} dari {len(st.session_state.soal_acak)}")
-    
-    # Simpan skor
+
+# ✅ Simpan skor hanya sekali
+if not st.session_state.skor_tersimpan:
     simpan_skor(
         st.session_state.siswa_nama,
         st.session_state.siswa_kelas,
         st.session_state.skor,
         len(st.session_state.soal_acak)
     )
+    st.session_state.skor_tersimpan = True
 
     # Tampilkan tombol lanjut
     if st.button("Ulangi Kuis"):
