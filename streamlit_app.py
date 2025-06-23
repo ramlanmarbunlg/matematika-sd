@@ -90,6 +90,12 @@ if st.session_state.siswa_nama == "":
 st.title("🧮 Kuis Matematika SD")
 st.markdown(f"Selamat datang, **{st.session_state.siswa_nama}** dari **{st.session_state.siswa_kelas}** 👋")
 
+# 🚪 Tombol Logout
+if st.button("🚪 Logout"):
+    del st.session_state.siswa_nama
+    del st.session_state.siswa_kelas
+    st.rerun()
+
 kelas = st.session_state.siswa_kelas
 
 # Reset soal jika ganti kelas
