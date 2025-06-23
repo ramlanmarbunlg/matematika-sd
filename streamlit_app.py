@@ -99,7 +99,7 @@ if st.session_state.siswa_nama == "":
 
 # ==================== TAMPILAN UTAMA ====================
 
-st.title("🫮 Kuis Matematika SD")
+st.title("Kuis Matematika SD")
 st.markdown(f"Selamat datang, **{st.session_state.siswa_nama}** dari **{st.session_state.siswa_kelas}** 👋")
 
 if st.button("🚪 Logout"):
@@ -176,7 +176,19 @@ if st.session_state.index_soal >= len(st.session_state.soal_acak):
 
     st.download_button("📄 Download Sertifikat PDF", data=pdf, file_name="sertifikat.pdf", mime="application/pdf")
 
-    def buat_sertifikat(nama, kelas, skor, total):
+    if st.button("🔄 Ulangi Kuis"):
+        st.session_state.index_soal = 0
+        st.session_state.skor = 0
+        st.session_state.terjawab = False
+        st.session_state.skor_tersimpan = False
+        st.session_state.soal_acak = random.sample(soal_bank[kelas], len(soal_bank[kelas]))
+        st.session_state.waktu_mulai_soal = datetime.now()
+        st.rerun()
+
+    if st.button("📊 Lihat Statistik Belajar"):
+        tampilkan_statistik()
+
+ def buat_sertifikat(nama, kelas, skor, total):
         buffer = BytesIO()
         c = canvas.Canvas(buffer)
         c.setFillColor(colors.lightblue)
@@ -195,16 +207,3 @@ if st.session_state.index_soal >= len(st.session_state.soal_acak):
         c.save()
         buffer.seek(0)
         return buffer
-
-    if st.button("🔄 Ulangi Kuis"):
-        st.session_state.index_soal = 0
-        st.session_state.skor = 0
-        st.session_state.terjawab = False
-        st.session_state.skor_tersimpan = False
-        st.session_state.soal_acak = random.sample(soal_bank[kelas], len(soal_bank[kelas]))
-        st.session_state.waktu_mulai_soal = datetime.now()
-        st.rerun()
-
-    if st.button("📊 Lihat Statistik Belajar"):
-        tampilkan_statistik()
-
