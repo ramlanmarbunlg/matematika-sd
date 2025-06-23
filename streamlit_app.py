@@ -206,5 +206,5 @@ pdf = buat_sertifikat(
     len(st.session_state.soal_acak)
     )
 
-st.download_button("📄 Download Sertifikat PDF", data=pdf, file_name="sertifikat.pdf", mime="application/pdf")
+    st.download_button("📄 Download Sertifikat PDF", data=pdf, file_name="sertifikat.pdf", mime="application/pdf")
 
