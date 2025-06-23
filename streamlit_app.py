@@ -7,6 +7,7 @@ import pandas as pd
 from datetime import datetime
 from zoneinfo import ZoneInfo  # Python 3.9+
 from reportlab.pdfgen import canvas
+from reportlab.lib import colors
 from io import BytesIO
 
 st.set_page_config(page_title="Kuis Matematika SD", page_icon="🫮")
@@ -180,8 +181,11 @@ if st.session_state.index_soal >= len(st.session_state.soal_acak):
 def buat_sertifikat(nama, kelas, skor, total):
     buffer = BytesIO()
     c = canvas.Canvas(buffer)
-    c.setFont("Helvetica-Bold", 20)
-    c.drawString(100, 750, "SERTIFIKAT KUIS MATEMATIKA")
+    c.setFillColor(colors.lightblue)
+    c.rect(50, 500, 740, 50, fill=1)
+    c.setFillColor(colors.black)
+    c.setFont("Helvetica-Bold", 22)
+    c.drawCentredString(421, 520, "SERTIFIKAT KUIS MATEMATIKA")
     c.setFont("Helvetica", 14)
     c.drawString(100, 700, f"Nama: {nama}")
     c.drawString(100, 680, f"Kelas: {kelas}")
