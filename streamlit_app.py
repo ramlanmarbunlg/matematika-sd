@@ -201,9 +201,10 @@ def buat_sertifikat(nama, kelas, skor, total):
     
     tanggal = datetime.now(ZoneInfo("Asia/Jakarta")).strftime('%d %B %Y')
     c.drawString(100, 640, f"Tanggal: {tanggal}")
+
+    st.download_button("📄 Download Sertifikat PDF", data=pdf, file_name="sertifikat.pdf", mime="application/pdf")
     
     c.save()
     buffer.seek(0)
     return buffer
-st.download_button("📄 Download Sertifikat PDF", data=pdf, file_name="sertifikat.pdf", mime="application/pdf")
 
