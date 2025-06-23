@@ -1,24 +1,16 @@
 import streamlit as st
 import random
+import json
 
 st.set_page_config(page_title="Kuis Matematika SD", page_icon="🧮")
 
-# Soal Matematika (bisa dikembangkan lagi)
-soal_bank = {
-    "Kelas 1": [
-        {"soal": "2 + 3 =", "opsi": ["4", "5", "6"], "jawaban": "5"},
-        {"soal": "7 - 4 =", "opsi": ["2", "3", "4"], "jawaban": "3"},
-        {"soal": "5 + 1 =", "opsi": ["6", "5", "7"], "jawaban": "6"},
-    ],
-    "Kelas 2": [
-        {"soal": "12 - 5 =", "opsi": ["6", "7", "8"], "jawaban": "7"},
-        {"soal": "4 × 2 =", "opsi": ["6", "8", "10"], "jawaban": "8"},
-    ],
-    "Kelas 3": [
-        {"soal": "36 ÷ 6 =", "opsi": ["5", "6", "7"], "jawaban": "6"},
-        {"soal": "5 × 5 =", "opsi": ["25", "20", "30"], "jawaban": "25"},
-    ]
-}
+# Fungsi load soal dari file JSON (bisa dikembangkan lagi)
+@st.cache_data
+def load_soal():
+    with open("soal_sd.json", "r", encoding="utf-8") as f:
+        return json.load(f)
+
+soal_bank = load_soal()
 
 # Inisialisasi session state
 if "index_soal" not in st.session_state:
