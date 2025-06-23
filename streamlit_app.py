@@ -9,7 +9,8 @@ from zoneinfo import ZoneInfo  # Python 3.9+
 
 st.set_page_config(page_title="Kuis Matematika SD", page_icon="🧮")
 
-# ========== FUNGSI ==========
+# ==================== FUNGSI ====================
+
 @st.cache_data
 def load_soal():
     with open("soal_sd.json", "r", encoding="utf-8") as f:
@@ -34,8 +35,13 @@ def tampilkan_statistik():
         return
 
     df = pd.read_csv("skor.csv")
-    st.subheader("📊 Statistik Kelas")
 
+    if "Skor" not in df.columns:
+        st.error("❌ Kolom 'Skor' tidak ditemukan di file skor.csv")
+        st.write("Kolom tersedia:", list(df.columns))
+        return
+
+    st.subheader("📊 Statistik Kelas")
     st.write("**Jumlah Siswa Tercatat:**", df.shape[0])
     st.write("**Rata-rata Skor:**", round(df["Skor"].mean(), 2))
     st.bar_chart(df.groupby("Kelas")["Skor"].mean())
@@ -43,14 +49,28 @@ def tampilkan_statistik():
     st.subheader("📋 Riwayat Skor Siswa")
     st.dataframe(df.sort_values(by="Tanggal", ascending=False), use_container_width=True)
 
-# ========== LOAD ==========
+# ==================== INISIALISASI ====================
+
 soal_bank = load_soal()
 
-# ========== LOGIN SISWA ==========
 if "siswa_nama" not in st.session_state:
     st.session_state.siswa_nama = ""
 if "siswa_kelas" not in st.session_state:
     st.session_state.siswa_kelas = ""
+if "index_soal" not in st.session_state:
+    st.session_state.index_soal = 0
+if "skor" not in st.session_state:
+    st.session_state.skor = 0
+if "terjawab" not in st.session_state:
+    st.session_state.terjawab = False
+if "soal_acak" not in st.session_state:
+    st.session_state.soal_acak = []
+if "kelas_dipilih" not in st.session_state:
+    st.session_state.kelas_dipilih = None
+if "skor_tersimpan" not in st.session_state:
+    st.session_state.skor_tersimpan = False
+
+# ==================== LOGIN SISWA ====================
 
 if st.session_state.siswa_nama == "":
     st.title("🔐 Login Siswa")
@@ -65,32 +85,29 @@ if st.session_state.siswa_nama == "":
             st.warning("Nama tidak boleh kosong!")
     st.stop()
 
-# ========== INISIALISASI ==========
-if "index_soal" not in st.session_state:
-    st.session_state.index_soal = 0
-    st.session_state.skor = 0
-    st.session_state.terjawab = False
-    st.session_state.kelas_dipilih = None
-    st.session_state.soal_acak = []
+# ==================== TAMPILAN UTAMA ====================
 
-# ========== MAIN ==========
 st.title("🧮 Kuis Matematika SD")
 st.markdown(f"Selamat datang, **{st.session_state.siswa_nama}** dari **{st.session_state.siswa_kelas}** 👋")
 
 kelas = st.session_state.siswa_kelas
 
+# Reset soal jika ganti kelas
 if st.session_state.kelas_dipilih != kelas:
     st.session_state.kelas_dipilih = kelas
     st.session_state.index_soal = 0
     st.session_state.skor = 0
     st.session_state.terjawab = False
+    st.session_state.skor_tersimpan = False
     st.session_state.soal_acak = random.sample(soal_bank[kelas], len(soal_bank[kelas]))
 
-# Jalankan soal
+# ==================== JALANKAN SOAL ====================
+
 if st.session_state.index_soal < len(st.session_state.soal_acak):
     current = st.session_state.soal_acak[st.session_state.index_soal]
     st.subheader(f"Soal {st.session_state.index_soal + 1}")
     st.write(current["soal"])
+
     pilihan = st.radio("Pilih jawaban:", current["opsi"], key=f"opsi_{st.session_state.index_soal}")
 
     if st.button("Jawab"):
@@ -107,29 +124,33 @@ if st.session_state.index_soal < len(st.session_state.soal_acak):
             st.session_state.index_soal += 1
             st.session_state.terjawab = False
             st.rerun()
-else:
+
+# ==================== SETELAH KUIS SELESAI ====================
+
+if st.session_state.index_soal >= len(st.session_state.soal_acak):
     st.success(f"🎉 Kuis selesai, {st.session_state.siswa_nama}! Skor kamu: {st.session_state.skor} dari {len(st.session_state.soal_acak)}")
 
-# ✅ Simpan skor hanya sekali
-if not st.session_state.skor_tersimpan:
-    simpan_skor(
-        st.session_state.siswa_nama,
-        st.session_state.siswa_kelas,
-        st.session_state.skor,
-        len(st.session_state.soal_acak)
-    )
-    st.session_state.skor_tersimpan = True
+    # Simpan skor hanya sekali
+    if not st.session_state.skor_tersimpan:
+        simpan_skor(
+            st.session_state.siswa_nama,
+            st.session_state.siswa_kelas,
+            st.session_state.skor,
+            len(st.session_state.soal_acak)
+        )
+        st.session_state.skor_tersimpan = True
 
-# 🎯 Tampilkan tombol di luar blok agar selalu muncul setelah kuis selesai
-if st.session_state.index_soal >= len(st.session_state.soal_acak):
-    if st.button("🔄 Ulangi Kuis"):
-        st.session_state.index_soal = 0
-        st.session_state.skor = 0
-        st.session_state.terjawab = False
-        st.session_state.skor_tersimpan = False
-        st.session_state.soal_acak = random.sample(soal_bank[kelas], len(soal_bank[kelas]))
-        st.rerun()
+    # Tombol muncul setelah skor tersimpan
+    col1, col2 = st.columns(2)
+    with col1:
+        if st.button("🔄 Ulangi Kuis"):
+            st.session_state.index_soal = 0
+            st.session_state.skor = 0
+            st.session_state.terjawab = False
+            st.session_state.skor_tersimpan = False
+            st.session_state.soal_acak = random.sample(soal_bank[kelas], len(soal_bank[kelas]))
+            st.rerun()
 
-    if st.button("📊 Lihat Statistik Belajar"):
-        tampilkan_statistik()
-
+    with col2:
+        if st.button("📊 Lihat Statistik Belajar"):
+            tampilkan_statistik()
