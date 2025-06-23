@@ -174,8 +174,6 @@ if st.session_state.index_soal >= len(st.session_state.soal_acak):
         len(st.session_state.soal_acak)
     )
 
-    st.download_button("📄 Download Sertifikat PDF", data=pdf, file_name="sertifikat.pdf", mime="application/pdf")
-
     if st.button("🔄 Ulangi Kuis"):
         st.session_state.index_soal = 0
         st.session_state.skor = 0
@@ -207,4 +205,5 @@ def buat_sertifikat(nama, kelas, skor, total):
     c.save()
     buffer.seek(0)
     return buffer
+st.download_button("📄 Download Sertifikat PDF", data=pdf, file_name="sertifikat.pdf", mime="application/pdf")
 
