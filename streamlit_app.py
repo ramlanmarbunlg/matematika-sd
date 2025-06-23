@@ -123,13 +123,16 @@ if not st.session_state.skor_tersimpan:
     )
     st.session_state.skor_tersimpan = True
 
-    # Tampilkan tombol lanjut
-    if st.button("Ulangi Kuis"):
+# 🎯 Tampilkan tombol di luar blok agar selalu muncul setelah kuis selesai
+if st.session_state.index_soal >= len(st.session_state.soal_acak):
+    if st.button("🔄 Ulangi Kuis"):
         st.session_state.index_soal = 0
         st.session_state.skor = 0
         st.session_state.terjawab = False
+        st.session_state.skor_tersimpan = False
         st.session_state.soal_acak = random.sample(soal_bank[kelas], len(soal_bank[kelas]))
         st.rerun()
 
-    if st.button("Lihat Statistik Belajar"):
+    if st.button("📊 Lihat Statistik Belajar"):
         tampilkan_statistik()
+
