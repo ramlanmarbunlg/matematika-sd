@@ -165,14 +165,6 @@ if st.session_state.index_soal >= len(st.session_state.soal_acak):
             len(st.session_state.soal_acak)
         )
         st.session_state.skor_tersimpan = True
-        
-    # Misalnya setelah skor tersimpan
-    pdf = buat_sertifikat(
-        st.session_state.siswa_nama,
-        st.session_state.siswa_kelas,
-        st.session_state.skor,
-        len(st.session_state.soal_acak)
-    )
 
     if st.button("🔄 Ulangi Kuis"):
         st.session_state.index_soal = 0
@@ -185,6 +177,16 @@ if st.session_state.index_soal >= len(st.session_state.soal_acak):
 
     if st.button("📊 Lihat Statistik Belajar"):
         tampilkan_statistik()
+
+# Misalnya setelah skor tersimpan
+    pdf = buat_sertifikat(
+        st.session_state.siswa_nama,
+        st.session_state.siswa_kelas,
+        st.session_state.skor,
+        len(st.session_state.soal_acak)
+    )
+
+    st.download_button("📄 Download Sertifikat PDF", data=pdf, file_name="sertifikat.pdf", mime="application/pdf")
 
 def buat_sertifikat(nama, kelas, skor, total):
     buffer = BytesIO()
@@ -201,8 +203,6 @@ def buat_sertifikat(nama, kelas, skor, total):
     
     tanggal = datetime.now(ZoneInfo("Asia/Jakarta")).strftime('%d %B %Y')
     c.drawString(100, 640, f"Tanggal: {tanggal}")
-
-    st.download_button("📄 Download Sertifikat PDF", data=pdf, file_name="sertifikat.pdf", mime="application/pdf")
     
     c.save()
     buffer.seek(0)
