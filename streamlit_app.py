@@ -140,14 +140,22 @@ if st.session_state.index_soal >= len(st.session_state.soal_acak):
         )
         st.session_state.skor_tersimpan = True
 
-    # Tombol muncul setelah skor tersimpan
-        if st.button("🔄 Ulangi Kuis"):
-            st.session_state.index_soal = 0
-            st.session_state.skor = 0
-            st.session_state.terjawab = False
-            st.session_state.skor_tersimpan = False
-            st.session_state.soal_acak = random.sample(soal_bank[kelas], len(soal_bank[kelas]))
-            st.rerun()
+# Tombol muncul setelah skor tersimpan (versi vertikal)
+if st.button("🔄 Ulangi Kuis"):
+    st.session_state.index_soal = 0
+    st.session_state.skor = 0
+    st.session_state.terjawab = False
+    st.session_state.skor_tersimpan = False
+    st.session_state.soal_acak = random.sample(soal_bank[kelas], len(soal_bank[kelas]))
+    st.rerun()
 
-        if st.button("📊 Lihat Statistik Belajar"):
-            tampilkan_statistik()
+if st.button("📊 Lihat Statistik Belajar"):
+    tampilkan_statistik()
+
+with st.expander("⚠️ Opsi Admin: Hapus Semua Skor"):
+    if st.button("🗑️ Hapus Semua Data Skor"):
+        with open("skor.csv", "w", newline="", encoding="utf-8") as f:
+            writer = csv.writer(f)
+            writer.writerow(["Tanggal", "Nama", "Kelas", "Skor", "Total"])
+        st.success("✅ Semua data skor berhasil dihapus.")
+
