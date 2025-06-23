@@ -56,7 +56,7 @@ if kelas != "-- Pilih --":
             if st.button("Lanjut ke Soal Berikutnya"):
                 st.session_state.index_soal += 1
                 st.session_state.terjawab = False
-                st.experimental_rerun()
+                st.rerun()
     else:
         st.success(f"Kuis selesai! Skor kamu: {st.session_state.skor} dari {len(st.session_state.soal_acak)}")
         if st.button("Ulangi Kuis"):
@@ -64,4 +64,4 @@ if kelas != "-- Pilih --":
             st.session_state.skor = 0
             st.session_state.terjawab = False
             st.session_state.soal_acak = random.sample(soal_bank[kelas], len(soal_bank[kelas]))
-            st.experimental_rerun()
+            st.rerun()
