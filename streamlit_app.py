@@ -141,8 +141,6 @@ if st.session_state.index_soal >= len(st.session_state.soal_acak):
         st.session_state.skor_tersimpan = True
 
     # Tombol muncul setelah skor tersimpan
-    col1, col2 = st.columns(2)
-    with col1:
         if st.button("🔄 Ulangi Kuis"):
             st.session_state.index_soal = 0
             st.session_state.skor = 0
@@ -151,6 +149,5 @@ if st.session_state.index_soal >= len(st.session_state.soal_acak):
             st.session_state.soal_acak = random.sample(soal_bank[kelas], len(soal_bank[kelas]))
             st.rerun()
 
-    with col2:
         if st.button("📊 Lihat Statistik Belajar"):
             tampilkan_statistik()
