@@ -73,9 +73,6 @@ if "index_soal" not in st.session_state:
     st.session_state.kelas_dipilih = None
     st.session_state.soal_acak = []
 
-if "skor_tersimpan" not in st.session_state:
-    st.session_state.skor_tersimpan = False
-
 # ========== MAIN ==========
 st.title("🧮 Kuis Matematika SD")
 st.markdown(f"Selamat datang, **{st.session_state.siswa_nama}** dari **{st.session_state.siswa_kelas}** 👋")
