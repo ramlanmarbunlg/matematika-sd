@@ -188,7 +188,7 @@ if st.session_state.index_soal >= len(st.session_state.soal_acak):
     if st.button("📊 Lihat Statistik Belajar"):
         tampilkan_statistik()
 
- def buat_sertifikat(nama, kelas, skor, total):
+     def buat_sertifikat(nama, kelas, skor, total):
         buffer = BytesIO()
         c = canvas.Canvas(buffer)
         c.setFillColor(colors.lightblue)
