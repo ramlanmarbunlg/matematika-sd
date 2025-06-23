@@ -194,4 +194,4 @@ if st.session_state.index_soal >= len(st.session_state.soal_acak):
         buffer.seek(0)
         return buffer
 
-        st.download_button("📄 Download Sertifikat PDF", data=pdf, file_name="sertifikat.pdf", mime="application/pdf")
+    st.download_button("📄 Download Sertifikat PDF", data=pdf, file_name="sertifikat.pdf", mime="application/pdf")
