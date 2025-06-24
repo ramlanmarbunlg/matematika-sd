@@ -1,7 +1,3 @@
-# File: app.py
-# -------------------------------
-# Aplikasi Kuis Matematika SD dengan login dari Google Sheets
-# -------------------------------
 import streamlit as st
 import random
 import json
