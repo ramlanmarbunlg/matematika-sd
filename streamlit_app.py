@@ -25,7 +25,9 @@ def load_login_data():
     creds_dict = dict(st.secrets["gcp_service_account"])
     creds = ServiceAccountCredentials.from_json_keyfile_dict(creds_dict, scope)
     client = gspread.authorize(creds)
-    sheet = client.open("siswa_login").sheet1
+    
+    # Lebih aman pakai key daripada nama sheet
+    sheet = client.open_by_key("1FvXW_Hk6gCQL_0ajI5Wq3Nkv2rTJJBy_ysDhggolkTs").sheet1
     data = sheet.get_all_records()
     return pd.DataFrame(data)
 
