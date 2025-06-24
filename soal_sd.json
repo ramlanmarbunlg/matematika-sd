@@ -1,6 +1,6 @@
 {
   "Kelas 1": [
-    { "soal": "2 + 3 =", "opsi": ["4", "5", "6"], "jawaban": "5" },
+    { "soal": "2 + 3 =", "opsi": ["4", "5", "6"], "jawaban": "5", "gambar": "gambar_soal/kelas1_soal1.png"},
     { "soal": "7 - 4 =", "opsi": ["2", "3", "4"], "jawaban": "3" },
     { "soal": "5 + 1 =", "opsi": ["6", "5", "7"], "jawaban": "6" },
     { "soal": "1 + 1 =", "opsi": ["1", "2", "3"], "jawaban": "2" },
