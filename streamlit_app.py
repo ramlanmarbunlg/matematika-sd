@@ -14,11 +14,7 @@ from oauth2client.service_account import ServiceAccountCredentials
 
 st.set_page_config(page_title="Kuis Matematika SD", page_icon="🧮")
 
-# ==================== KONEKSI GOOGLE SHEETS ====================
-# Untuk debug (lihat nama semua spreadsheet yang bisa diakses)
-for sheet in client.openall():
-    st.write("Sheet ditemukan:", sheet.title)
-    
+# ==================== KONEKSI GOOGLE SHEETS ==================== 
 @st.cache_resource
 def load_login_data():
     scope = [
@@ -34,6 +30,10 @@ def load_login_data():
     return pd.DataFrame(data)
 
 # ==================== FUNGSI ====================
+# Untuk debug (lihat nama semua spreadsheet yang bisa diakses)
+for sheet in client.openall():
+    st.write("Sheet ditemukan:", sheet.title)
+    
 @st.cache_data
 def load_soal():
     with open("soal_sd.json", "r", encoding="utf-8") as f:
