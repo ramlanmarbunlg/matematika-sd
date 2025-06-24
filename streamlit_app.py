@@ -187,10 +187,3 @@ if st.session_state.index_soal >= len(st.session_state.soal_acak):
 
     if st.button("📊 Lihat Statistik Belajar"):
         tampilkan_statistik()
-
-    with st.expander("⚠️ Opsi Admin: Hapus Semua Skor"):
-        if st.button("🗑️ Hapus Semua Data Skor"):
-            with open("skor.csv", "w", newline="", encoding="utf-8") as f:
-                writer = csv.writer(f)
-                writer.writerow(["Tanggal", "Nama", "Kelas", "Skor", "Total"])
-            st.success("✅ Semua data skor berhasil dihapus.")
