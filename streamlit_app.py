@@ -126,8 +126,9 @@ if st.session_state.index_soal < len(st.session_state.soal_acak):
     waktu_sisa = max(0, waktu_sisa)
     st.warning(f"⏱️ Sisa waktu menjawab: **{waktu_sisa} detik**")
 
-    if "gambar" in current:
-        st.image(current["gambar"], use_column_width=True)
+    # Tampilkan gambar jika ada
+    if "gambar" in current and current["gambar"]:
+        st.image(current["gambar"], width=300)
 
     st.subheader(f"Soal {st.session_state.index_soal + 1}")
     st.write(current["soal"])
