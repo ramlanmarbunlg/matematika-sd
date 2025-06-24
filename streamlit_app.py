@@ -126,12 +126,12 @@ if st.session_state.index_soal < len(st.session_state.soal_acak):
     waktu_sisa = max(0, waktu_sisa)
     st.warning(f"⏱️ Sisa waktu menjawab: **{waktu_sisa} detik**")
 
-    # Tampilkan gambar jika ada
-    if "gambar" in current and current["gambar"]:
-        st.image(current["gambar"], width=300)
-
     st.subheader(f"Soal {st.session_state.index_soal + 1}")
     st.write(current["soal"])
+        # Tampilkan gambar jika ada
+    if "gambar" in current and current["gambar"]:
+        st.image(current["gambar"], width=100, width=100)
+        
     pilihan = st.radio("Pilih jawaban:", current["opsi"], key=f"opsi_{st.session_state.index_soal}")
 
     if waktu_sisa <= 0 and not st.session_state.terjawab:
