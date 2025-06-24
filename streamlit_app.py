@@ -87,7 +87,7 @@ if "waktu_mulai_soal" not in st.session_state:
 if st.session_state.siswa_nama == "":
     st.title("🔐 Login Siswa")
     nama = st.text_input("Nama Lengkap")
-    kelas = st.selectbox("Kelas", ["Kelas 1", "Kelas 2", "Kelas 3"])
+    kelas = st.selectbox("Kelas", ["Kelas 1", "Kelas 2", "Kelas 3", "Kelas 4", "Kelas 5", "Kelas 6"])
     if st.button("Mulai Kuis"):
         if nama.strip() != "":
             st.session_state.siswa_nama = nama
