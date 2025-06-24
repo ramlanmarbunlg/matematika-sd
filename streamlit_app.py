@@ -1,3 +1,7 @@
+# File: app.py
+# -------------------------------
+# Aplikasi Kuis Matematika SD dengan login dari Google Sheets
+# -------------------------------
 import streamlit as st
 import random
 import json
@@ -5,16 +9,30 @@ import csv
 import os
 import pandas as pd
 from datetime import datetime
-from zoneinfo import ZoneInfo  # Python 3.9+
+from zoneinfo import ZoneInfo
 from reportlab.pdfgen import canvas
 from reportlab.lib import colors
 from io import BytesIO
+import gspread
+from oauth2client.service_account import ServiceAccountCredentials
 
-st.set_page_config(page_title="Kuis Matematika SD", page_icon="🫮")
+st.set_page_config(page_title="Kuis Matematika SD", page_icon="🧮")
+
+# ==================== KONEKSI GOOGLE SHEETS ====================
+@st.cache_resource
+def load_login_data():
+    scope = [
+        "https://spreadsheets.google.com/feeds",
+        "https://www.googleapis.com/auth/drive"
+    ]
+    creds = ServiceAccountCredentials.from_json_keyfile_name("credentials.json", scope)
+    client = gspread.authorize(creds)
+    sheet = client.open("siswa_login").sheet1
+    data = sheet.get_all_records()
+    return pd.DataFrame(data)
 
 # ==================== FUNGSI ====================
-
-@st.cache_data(show_spinner=False)
+@st.cache_data
 def load_soal():
     with open("soal_sd.json", "r", encoding="utf-8") as f:
         return json.load(f)
@@ -35,9 +53,6 @@ def tampilkan_statistik():
         st.info("Belum ada data skor yang tersimpan.")
         return
     df = pd.read_csv("skor.csv")
-    if "Skor" not in df.columns:
-        st.error("❌ Kolom 'Skor' tidak ditemukan di file skor.csv")
-        return
     st.subheader("📊 Statistik Kelas")
     st.write("**Jumlah Siswa Tercatat:**", df.shape[0])
     st.write("**Rata-rata Skor:**", round(df["Skor"].mean(), 2))
@@ -48,21 +63,23 @@ def tampilkan_statistik():
 def buat_sertifikat(nama, kelas, skor, total):
     buffer = BytesIO()
     c = canvas.Canvas(buffer)
-    c.setFont("Helvetica-Bold", 20)
-    c.drawString(100, 750, "SERTIFIKAT KUIS MATEMATIKA")
+    c.setFillColor(colors.lightblue)
+    c.rect(50, 500, 740, 50, fill=1)
+    c.setFillColor(colors.black)
+    c.setFont("Helvetica-Bold", 22)
+    c.drawCentredString(421, 520, "SERTIFIKAT KUIS MATEMATIKA")
     c.setFont("Helvetica", 14)
     c.drawString(100, 700, f"Nama: {nama}")
     c.drawString(100, 680, f"Kelas: {kelas}")
     c.drawString(100, 660, f"Skor: {skor} dari {total}")
-    c.drawString(100, 640, f"Tanggal: {datetime.now().strftime('%d %B %Y')}")
+    tanggal = datetime.now(ZoneInfo("Asia/Jakarta")).strftime('%d %B %Y')
+    c.drawString(100, 640, f"Tanggal: {tanggal}")
     c.save()
     buffer.seek(0)
     return buffer
 
-# ==================== INISIALISASI ====================
-
+# ==================== INISIALISASI SESSION STATE ====================
 soal_bank = load_soal()
-
 if "siswa_nama" not in st.session_state:
     st.session_state.siswa_nama = ""
 if "siswa_kelas" not in st.session_state:
@@ -83,32 +100,30 @@ if "waktu_mulai_soal" not in st.session_state:
     st.session_state.waktu_mulai_soal = datetime.now()
 
 # ==================== LOGIN SISWA ====================
-
 if st.session_state.siswa_nama == "":
     st.title("🔐 Login Siswa")
+    df_login = load_login_data()
     nama = st.text_input("Nama Lengkap")
-    kelas = st.selectbox("Kelas", ["Kelas 1", "Kelas 2", "Kelas 3", "Kelas 4", "Kelas 5", "Kelas 6"])
-    if st.button("Mulai Kuis"):
-        if nama.strip() != "":
-            st.session_state.siswa_nama = nama
-            st.session_state.siswa_kelas = kelas
+    password = st.text_input("Password", type="password")
+    if st.button("Login"):
+        match = df_login[(df_login["Nama"].str.lower() == nama.strip().lower()) & (df_login["Password"] == password)]
+        if not match.empty:
+            st.session_state.siswa_nama = match.iloc[0]["Nama"]
+            st.session_state.siswa_kelas = match.iloc[0]["Kelas"]
             st.rerun()
         else:
-            st.warning("Nama tidak boleh kosong!")
+            st.error("Nama atau password salah.")
     st.stop()
 
-# ==================== TAMPILAN UTAMA ====================
-
-st.title("Kuis Matematika SD")
+# ==================== HALAMAN UTAMA ====================
+st.title("🧮 Kuis Matematika SD")
 st.markdown(f"Selamat datang, **{st.session_state.siswa_nama}** dari **{st.session_state.siswa_kelas}** 👋")
-
 if st.button("🚪 Logout"):
     del st.session_state.siswa_nama
     del st.session_state.siswa_kelas
     st.rerun()
 
 kelas = st.session_state.siswa_kelas
-
 if st.session_state.kelas_dipilih != kelas:
     st.session_state.kelas_dipilih = kelas
     st.session_state.index_soal = 0
@@ -118,8 +133,7 @@ if st.session_state.kelas_dipilih != kelas:
     st.session_state.soal_acak = random.sample(soal_bank[kelas], len(soal_bank[kelas]))
     st.session_state.waktu_mulai_soal = datetime.now()
 
-# ==================== JALANKAN SOAL ====================
-
+# ==================== TAMPILKAN SOAL ====================
 if st.session_state.index_soal < len(st.session_state.soal_acak):
     current = st.session_state.soal_acak[st.session_state.index_soal]
     waktu_sisa = 20 - int((datetime.now() - st.session_state.waktu_mulai_soal).total_seconds())
@@ -128,10 +142,8 @@ if st.session_state.index_soal < len(st.session_state.soal_acak):
 
     st.subheader(f"Soal {st.session_state.index_soal + 1}")
     st.write(current["soal"])
-        # Tampilkan gambar jika ada
     if "gambar" in current and current["gambar"]:
         st.image(current["gambar"], width=100)
-        
     pilihan = st.radio("Pilih jawaban:", current["opsi"], key=f"opsi_{st.session_state.index_soal}")
 
     if waktu_sisa <= 0 and not st.session_state.terjawab:
@@ -156,27 +168,12 @@ if st.session_state.index_soal < len(st.session_state.soal_acak):
             st.rerun()
 
 # ==================== SETELAH KUIS SELESAI ====================
-
 if st.session_state.index_soal >= len(st.session_state.soal_acak):
     st.success(f"🎉 Kuis selesai, {st.session_state.siswa_nama}! Skor kamu: {st.session_state.skor} dari {len(st.session_state.soal_acak)}")
-
     if not st.session_state.skor_tersimpan:
-        simpan_skor(
-            st.session_state.siswa_nama,
-            st.session_state.siswa_kelas,
-            st.session_state.skor,
-            len(st.session_state.soal_acak)
-        )
-        st.session_state.skor_tersimpan = True     
-    
-    # Misalnya setelah skor tersimpan
-    pdf = buat_sertifikat(
-        st.session_state.siswa_nama,
-        st.session_state.siswa_kelas,
-        st.session_state.skor,
-        len(st.session_state.soal_acak)
-        )
-
+        simpan_skor(st.session_state.siswa_nama, st.session_state.siswa_kelas, st.session_state.skor, len(st.session_state.soal_acak))
+        st.session_state.skor_tersimpan = True
+    pdf = buat_sertifikat(st.session_state.siswa_nama, st.session_state.siswa_kelas, st.session_state.skor, len(st.session_state.soal_acak))
     st.download_button("📄 Download Sertifikat PDF", data=pdf, file_name="sertifikat.pdf", mime="application/pdf")
 
     if st.button("🔄 Ulangi Kuis"):
@@ -190,26 +187,6 @@ if st.session_state.index_soal >= len(st.session_state.soal_acak):
 
     if st.button("📊 Lihat Statistik Belajar"):
         tampilkan_statistik()
-
-    def buat_sertifikat(nama, kelas, skor, total):
-        buffer = BytesIO()
-        c = canvas.Canvas(buffer)
-        c.setFillColor(colors.lightblue)
-        c.rect(50, 500, 740, 50, fill=1)
-        c.setFillColor(colors.black)
-        c.setFont("Helvetica-Bold", 22)
-        c.drawCentredString(421, 520, "SERTIFIKAT KUIS MATEMATIKA")
-        c.setFont("Helvetica", 14)
-        c.drawString(100, 700, f"Nama: {nama}")
-        c.drawString(100, 680, f"Kelas: {kelas}")
-        c.drawString(100, 660, f"Skor: {skor} dari {total}")
-            
-        tanggal = datetime.now(ZoneInfo("Asia/Jakarta")).strftime('%d %B %Y')
-        c.drawString(100, 640, f"Tanggal: {tanggal}")
-            
-        c.save()
-        buffer.seek(0)
-        return buffer
 
     with st.expander("⚠️ Opsi Admin: Hapus Semua Skor"):
         if st.button("🗑️ Hapus Semua Data Skor"):
