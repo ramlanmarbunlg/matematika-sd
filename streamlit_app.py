@@ -14,7 +14,7 @@ st.set_page_config(page_title="Kuis Matematika SD", page_icon="🫮")
 
 # ==================== FUNGSI ====================
 
-@st.cache_data
+@st.cache_data(show_spinner=False)
 def load_soal():
     with open("soal_sd.json", "r", encoding="utf-8") as f:
         return json.load(f)
