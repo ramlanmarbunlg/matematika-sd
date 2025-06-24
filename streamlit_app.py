@@ -141,8 +141,8 @@ if st.session_state.index_soal < len(st.session_state.soal_acak):
         st.session_state.terjawab = True
         if pilihan == current["jawaban"]:
             st.success("✅ Jawaban Benar!")
-            st.session_state.skor += 1
             st.balloons()
+            st.session_state.skor += 1
         else:
             st.error(f"❌ Salah. Jawaban yang benar: {current['jawaban']}")
             st.snow()
