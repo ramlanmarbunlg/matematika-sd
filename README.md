@@ -33,6 +33,7 @@ A simple Streamlit app template for you to modify!
    9. Setelah ketiga item diatas sudah dibuat, silakan download dalam bentuk file JSON
    10. Copy semua isi dalam file JSON ke bagian Settings project anda di Streamlit, pilih Secrets dan paste kedalam ini.
    11. Lakukan sedikit perubahan dari isinya file JSON konversi ke file TOML, kurang lebih susunan filenya seperti ini:
+   ```
    [gcp_service_account]
    type = "service_account"
    project_id = "kuis-matematika-sd-python"
@@ -45,7 +46,8 @@ A simple Streamlit app template for you to modify!
    auth_provider_x509_cert_url = "xxxxxxxxxxxxxxxxxxx"
    client_x509_cert_url = "xxxxxxxxxxxxxxxxxxxxxx"
    universe_domain = "googleapis.com"
-    12. Pastikan tidak ada langkah yang terlewati.
-    13. Jika masih gagal, cek kembali langkah-langkahnya sampai berhasil.
-    14. Selesai.
+   ```
+    13. Pastikan tidak ada langkah yang terlewati.
+    14. Jika masih gagal, cek kembali langkah-langkahnya sampai berhasil.
+    15. Selesai.
    
