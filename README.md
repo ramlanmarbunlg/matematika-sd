@@ -35,20 +35,21 @@ Aplikasi kuis ini dibuat dalam 3 versi yaitu: streamlit_appv1.py (versi 1); stre
    9. Setelah ketiga item diatas sudah dibuat, silakan download dalam bentuk file JSON
    10. Copy semua isi dalam file JSON ke bagian Settings project anda di Streamlit, pilih Secrets dan paste kedalam ini.
    11. Lakukan sedikit perubahan dari isinya file JSON konversi ke file TOML, kurang lebih susunan filenya seperti ini:
-[gcp_service_account]
-type = "service_account"
-project_id = "kuis-matematika-sd-python"
-private_key_id ="f4e80ade09e9fa6440f3ee6d5162318cc4140cac"
-private_key = """-----BEGIN PRIVATE KEY-----\xxxxxxxxxxxxxxxxxxxxxxxxxxxxx\n-----END PRIVATE KEY-----"""
-client_email = "xxxxx@xxxxx.gserviceaccount.com"
-client_id = "12345xxxxxxxxxxxxxxx"
-auth_uri = "xxxxx"
-token_uri = "xxxxxxxxxxx"
-auth_provider_x509_cert_url = "xxxxxxxxxxxxxxxxxxx"
-client_x509_cert_url = "xxxxxxxxxxxxxxxxxxxxxx"
-universe_domain = "googleapis.com"
+   [gcp_service_account]
+   type = "service_account"
+   project_id = "kuis-matematika-sd-python"
+   private_key_id ="f4e80ade09e9fa6440f3ee6d5162318cc4140cac"
+   private_key = """-----BEGIN PRIVATE KEY-----\xxxxxxxxxxxxxxxxxxxxxxxxxxxxx\n-----END PRIVATE KEY-----"""
+   client_email = "xxxxx@xxxxx.gserviceaccount.com"
+   client_id = "12345xxxxxxxxxxxxxxx"
+   auth_uri = "xxxxx"
+   token_uri = "xxxxxxxxxxx"
+   auth_provider_x509_cert_url = "xxxxxxxxxxxxxxxxxxx"
+   client_x509_cert_url = "xxxxxxxxxxxxxxxxxxxxxx"
+   universe_domain = "googleapis.com"
     12. Pastikan tidak ada langkah yang terlewati.
     13. Jika masih gagal, cek kembali langkah-langkahnya sampai berhasil.
     14. Selesai.
+   
    ```
 
