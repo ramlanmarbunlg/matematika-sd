@@ -113,9 +113,7 @@ if st.session_state.siswa_nama == "":
             st.rerun()
         else:
             st.error("Nama atau password salah.")
-    st.badge("Akun Uji Coba", color="blue")
-    st.badge("Nama Lengkap: Siswa 1", color="blue")
-    st.badge("Password: siswa123", color="blue")
+    st.badge("Akun Uji Coba", "Nama Lengkap: Siswa 1", "Password: siswa123", color="blue")
     st.stop()
 
 # ==================== HALAMAN UTAMA ====================
