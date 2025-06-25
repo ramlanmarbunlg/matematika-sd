@@ -19,11 +19,9 @@ A simple Streamlit app template for you to modify!
    ```
 
 3. Pilih versi aplikasi
-Aplikasi kuis ini dibuat dalam 3 versi yaitu: streamlit_appv1.py (versi 1); streamlit_appv2.py (versi 2); streamlit_appv.py (versi 3). Versi 1 dan 2 tidak menggunakan database untuk autentikasi login siswa. Versi 3 sudah diupgrade menggunakan database Google Sheets.
+   kuis ini dibuat dalam 3 versi yaitu: streamlit_appv1.py (versi 1); streamlit_appv2.py (versi 2); streamlit_appv.py (versi 3). Versi 1 dan 2 tidak menggunakan database untuk autentikasi login siswa. Versi 3 sudah diupgrade menggunakan database Google Sheets.
 
 4. Jika aplikasi ini mau di modifikasi
-
-   ```
    1. Silakan clone repository ini.
    2. Buat dan simpan Google Sheets di Google Drive anda (nama file google sheets bebas)
    3. Buat kolom Nama, Kelas, Password (isi sesuai yang anda mau; misalnya Nama: Siswa 1; Kelas: Kelas 1; Password: siswa123)
@@ -51,5 +49,3 @@ Aplikasi kuis ini dibuat dalam 3 versi yaitu: streamlit_appv1.py (versi 1); stre
     13. Jika masih gagal, cek kembali langkah-langkahnya sampai berhasil.
     14. Selesai.
    
-   ```
-
